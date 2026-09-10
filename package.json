@@ -1,0 +1,10 @@
+{
+  "name": "guksan-fact-library",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node scripts/server.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#173f35">
+  <meta name="theme-color" content="#0d0f13">
   <meta name="description" content="먹거리부터 제조업까지, 원산지와 수입품 관련 사례를 확인 상태와 원문 출처로 살펴보세요.">
   <title>국산 — 뉴스·사례 지도</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173f35'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white' font-family='sans-serif'%3E국%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/assets/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <script defer src="data.js"></script>
   <script defer src="app.js"></script>
@@ -15,36 +16,38 @@
   <a class="skip" href="#main">사례 목록으로 건너뛰기</a>
   <div class="shell">
     <aside class="sidebar">
-      <a class="brand" href="./" aria-label="국산 홈">국산<span class="brand-mark">.</span><span class="brand-sub">원산지 너머, 사실을 보다</span></a>
+      <a class="brand" href="./" aria-label="국산 홈">국산<span class="brand-mark">.</span><span class="brand-sub">뉴스 리서치</span></a>
       <div class="nav-label">사례 탐색</div>
       <nav id="categories" aria-label="분야별 사례"></nav>
       <div class="sidebar-bottom">
         <p class="note-title">확인된 사실부터.</p>
         <p>원료 사용과 안전성 위반은<br>서로 다른 이야기입니다.</p>
         <button class="text-button" id="about-open">수집·분류 기준 <span aria-hidden="true">↗</span></button>
-        <div class="sidebar-footer">뉴스·사례 아카이브<br><span>마지막 자료 확인 2026.09.08</span></div>
+        <div class="sidebar-footer">뉴스·사례 아카이브<br><span>마지막 사례 추가 2026.09.21</span></div>
       </div>
     </aside>
     <main id="main">
-      <header class="topbar"><span>아카이브 <span class="crumb">/ 뉴스·사례 지도</span></span><span class="edition">자료 기준 2026.09.08</span></header>
+      <header class="topbar"><span>아카이브 <span class="crumb">/ 뉴스·사례 지도</span></span><span class="edition">최근 업데이트 2026.09.21</span></header>
       <section class="intro" aria-labelledby="page-title">
-        <div><p class="eyebrow">생활 속 선택을 위한 기록</p><h1 id="page-title">어디서 왔는지,<br class="mobile-br"> 어떤 일이 있었는지.</h1><p class="intro-copy">먹거리부터 제조업까지. 출처와 확인 상태로 살펴보는 수입품 이야기.</p></div>
+        <div><p class="eyebrow">생활 속 선택을 위한 기록</p><h1 id="page-title">뉴스 인사이트</h1><p class="intro-copy">먹거리·생활용품·제조업의 변화와 후속 결과를 기록합니다.</p></div>
       </section>
       <section class="summary" aria-label="아카이브 요약">
-        <div><span>모아둔 사례</span><strong id="total-count">19<small>건</small></strong></div>
+        <div><span>모아둔 사례</span><strong id="total-count">29<small>건</small></strong></div>
         <div><span>위반 확인 사례</span><strong id="violation-count">0<small>건</small></strong></div>
         <div><span>살펴보는 분야</span><strong>5<small>개</small></strong></div>
         <p>기사의 제목보다<br><b>확인된 결과를 함께 봅니다.</b></p>
       </section>
+      <section class="workspace-tools" aria-label="뉴스 검색과 확인 상태">        <div class="search-wrap"><span aria-hidden="true" class="search-symbol">⌕</span><input id="search" type="search" placeholder="제품, 기업, 원재료 또는 키워드 검색" aria-label="사례 검색"><span class="search-hint">예: 전란액, 테무, 김치</span></div>
+        <div class="filters" id="statuses" role="group" aria-label="확인 상태 필터"></div></section>
+      <section class="latest" aria-labelledby="latest-heading"><div class="section-heading"><h2 id="latest-heading">최근 확인한 뉴스</h2><p>자료 확인일 순 · 발표일은 기사에 표시</p></div><div id="latest-news" class="latest-grid"></div></section>
       <section class="followup" aria-label="후속 확인 사례">
         <span class="followup-label">후속 발표 확인</span>
         <div><h2>‘포름알데히드 배추’, 국내 반입은?</h2><p>식약처는 해당 배추의 한국 수출이 없었다고 확인했습니다.</p></div>
         <button class="followup-button" data-open="cabbage">확인 내용 보기 <span aria-hidden="true">↗</span></button>
       </section>
       <section class="archive" aria-labelledby="list-heading">
-        <div class="archive-title"><h2 id="list-heading">전체 사례 <span id="result-count">19</span></h2><label class="sort-label">정렬 <select id="sort"><option value="newest">최신 발표순</option><option value="oldest">오래된 발표순</option></select></label></div>
-        <div class="search-wrap"><span aria-hidden="true" class="search-symbol">⌕</span><input id="search" type="search" placeholder="제품, 기업, 원재료 또는 키워드 검색" aria-label="사례 검색"><span class="search-hint">예: 전란액, 테무, 김치</span></div>
-        <div class="filters" id="statuses" role="group" aria-label="확인 상태 필터"></div>
+        <div class="archive-title"><h2 id="list-heading">전체 사례 <span id="result-count">29</span></h2><label class="sort-label">정렬 <select id="sort"><option value="newest">최신 발표순</option><option value="oldest">오래된 발표순</option></select></label></div>
+
         <div class="active-query" id="active-query" hidden><span id="query-text"></span><button id="reset" class="text-button">필터 초기화 ↺</button></div>
         <p class="sr-only" id="results-live" aria-live="polite"></p>
         <div class="cards" id="cards"></div>
@@ -55,6 +58,6 @@
     </main>
   </div>
   <dialog id="detail" aria-labelledby="detail-title"><button class="close-button" id="detail-close" aria-label="상세 내용 닫기">×</button><div id="detail-content"></div></dialog>
-  <dialog id="about" aria-labelledby="about-title"><button class="close-button" id="about-close" aria-label="수집 기준 닫기">×</button><div class="detail-inner"><p class="eyebrow">아카이브 안내</p><h2 id="about-title">자료를 읽는 기준</h2><p>이 페이지는 대화에서 조사한 뉴스와 공식 발표를 수동으로 선별해 모은 자료실입니다. 실시간 뉴스 수집 서비스는 아닙니다.</p><h3>확인 상태는 위험 등급이 아닙니다</h3><dl class="definitions"><dt class="red">위반 확인</dt><dd>검사 부적합, 행정 제재, 원산지 위반 또는 산업 피해 판정이 확인된 사례. 각 사건의 조치 단계를 상세 내용에 표시합니다.</dd><dt class="amber">사용·진출 확인</dt><dd>원료 사용이나 기업 진출이 확인된 사례. 그 자체로 불법이나 안전성 위반을 뜻하지 않습니다.</dd><dt class="blue">산업 변화</dt><dd>수입 통계, 산업 현장 취재, 공급망 분석. 통계의 기준 시점과 해석 범위를 함께 확인하세요.</dd><dt class="gray">후속 확인</dt><dd>초기 의혹 뒤 추가 조사나 공식 설명이 나온 사례. 후속 결과를 우선 표시합니다.</dd></dl><h3>출처와 원산지</h3><p>공식 기관의 발표와 언론 보도를 구분합니다. 국내 브랜드, 완제품 제조국, 원재료 원산지는 서로 다를 수 있습니다. 원문에서 확인되지 않은 정보는 ‘미확인’으로 표시합니다.</p><h3>수집 범위</h3><p>2019~2026년 사례 19건을 2026년 9월 8일 기준으로 정리했습니다. 동일 검사 발표에서 식품별로 사례를 나눈 경우가 있어, 사례 수는 기사 수와 다릅니다. 선별된 사례만으로 특정 국가나 전체 수입품의 안전성을 비교할 수 없습니다.</p></div></dialog>
+  <dialog id="about" aria-labelledby="about-title"><button class="close-button" id="about-close" aria-label="수집 기준 닫기">×</button><div class="detail-inner"><p class="eyebrow">아카이브 안내</p><h2 id="about-title">자료를 읽는 기준</h2><p>이 페이지는 뉴스와 공식 발표를 선별해 모은 자료실입니다. 매일 예약 조사로 새 사례와 중요한 후속 결과를 확인하며, 각 사례의 확인일은 상세 보기에 표시합니다.</p><h3>확인 상태는 위험 등급이 아닙니다</h3><dl class="definitions"><dt class="red">위반 확인</dt><dd>검사 부적합, 행정 제재, 원산지 위반 또는 산업 피해 판정이 확인된 사례. 각 사건의 조치 단계를 상세 내용에 표시합니다.</dd><dt class="green">사용·진출 확인</dt><dd>원료 사용이나 기업 진출이 확인된 사례. 그 자체로 불법이나 안전성 위반을 뜻하지 않습니다.</dd><dt class="blue">산업 변화</dt><dd>수입 통계, 산업 현장 취재, 공급망 분석. 통계의 기준 시점과 해석 범위를 함께 확인하세요.</dd><dt class="amber">미확인·조사 중</dt><dd>제보나 연구의 주장에 추가 확인이 필요한 사례. 확인되지 않은 내용을 사실로 단정하지 않습니다.</dd><dt class="gray">후속 확인</dt><dd>초기 의혹 뒤 추가 조사나 공식 설명이 나온 사례. 후속 결과를 우선 표시합니다.</dd></dl><h3>출처와 원산지</h3><p>공식 기관의 발표와 언론 보도를 구분합니다. 국내 브랜드, 완제품 제조국, 원재료 원산지는 서로 다를 수 있습니다. 원문에서 확인되지 않은 정보는 ‘미확인’으로 표시합니다.</p><h3>수집 범위</h3><p>2019~2026년 사례 29건을 모았습니다. 최근 추가일은 2026년 9월 21일이며 기존 사례의 확인일은 각각 다릅니다. 동일 검사 발표에서 식품별로 사례를 나눈 경우가 있어, 사례 수는 기사 수와 다릅니다. 선별된 사례만으로 특정 국가나 전체 수입품의 안전성을 비교할 수 없습니다.</p></div></dialog>
 </body>
 </html>

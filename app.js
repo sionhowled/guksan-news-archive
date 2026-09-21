@@ -2,7 +2,7 @@
   'use strict';
   const cases = window.CASES;
   const $ = id => document.getElementById(id);
-  const statusMap = {violation:['위반 확인','red'],confirmed:['사용·진출 확인','amber'],industry:['산업 변화','blue'],followup:['후속 확인','gray']};
+  const statusMap = {violation:['위반 확인','red'],confirmed:['사용·진출 확인','green'],industry:['산업 변화','blue'],followup:['후속 확인','gray'],unverified:['미확인·조사 중','amber']};
   const categories = ['전체 사례','먹거리','생활용품','유통 플랫폼','제조업','원산지'];
   const state = {category:'전체 사례',status:'all',query:'',sort:'newest'};
   const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -18,17 +18,29 @@
     const found = selected();
     $('list-heading').innerHTML = `${state.category} <span id="result-count">${found.length}</span>`;
     $('results-live').textContent = `${found.length}개의 사례가 있습니다.`;
-    $('cards').innerHTML = found.map(c=>`<article class="card"><div class="card-meta">${badge(c)}<time datetime="${c.id==='battery'?'2025-12':c.date}">${date(c)}</time></div><h3><button class="card-open" data-open="${c.id}">${escape(c.title)}</button></h3><p class="card-description">${escape(c.summary)}</p><div class="card-bottom"><div class="card-tags"><span class="tag">${c.category}</span><span class="tag">${escape(c.stage)}</span></div><div class="card-footer"><span><span class="source-type">${escape(c.sourceType)}</span>${escape(c.publisher)}</span><span class="card-arrow" aria-hidden="true">↗</span></div></div></article>`).join('');
+    $('cards').innerHTML = found.map(c=>`<article class="card"><div class="card-meta">${badge(c)}<time datetime="${c.id==='battery'?'2025-12':c.date}">발표 ${date(c)}</time><span>확인 ${escape((c.checkedAt || "2026-09-08").replaceAll("-","."))}</span></div><h3><button class="card-open" data-open="${c.id}">${escape(c.title)}</button></h3><p class="card-description">${escape(c.summary)}</p><div class="card-bottom"><div class="card-tags"><span class="tag">${c.category}</span><span class="tag">${escape(c.stage)}</span></div><div class="card-footer"><span><span class="source-type">${escape(c.sourceType)}</span>${escape(c.publisher)}</span><span class="card-arrow" aria-hidden="true">↗</span></div></div></article>`).join('');
     $('empty').hidden = found.length>0;
     const active = state.category!=='전체 사례'||state.status!=='all'||state.query!=='';
     $('active-query').hidden = !active;
     $('query-text').textContent = [state.category,state.status==='all'?'모든 상태':statusMap[state.status][0],state.query?`“${state.query}”`:null].filter(Boolean).join(' / ');
   }
   let opener;
+  let selectedId;
   function openCase(id, element) {
     const c = cases.find(c=>c.id===id); if(!c) return;
+    selectedId = id;
     opener = element || document.activeElement;
-    $('detail-content').innerHTML = `<div class="detail-inner">${badge(c)}<h2 id="detail-title">${escape(c.title)}</h2><p class="detail-meta">${escape(c.category)} · 발표 ${date(c)} · 자료 확인 2026.09.08</p><p>${escape(c.summary)}</p><dl class="detail-facts"><div><dt>대상·키워드</dt><dd>${escape(c.tags)}</dd></div><div><dt>원산지·관계 국가</dt><dd>${escape(c.origin)}</dd></div><div><dt>확인 단계</dt><dd>${escape(c.stage)}</dd></div></dl><h3>무슨 일이 있었나요?</h3><p>${escape(c.detail)}</p><h3>함께 확인할 점</h3><p class="scope-note">${escape(c.caution)}</p><h3>원문 출처</h3><a class="source-link" href="${escape(c.url)}" target="_blank" rel="noopener noreferrer"><span>${escape(c.publisher)}에서 원문 읽기<small>${escape(c.sourceType)} · 새 창으로 열림</small></span><span aria-hidden="true">↗</span></a></div>`;
+    $('detail-content').innerHTML = `<div class="detail-inner">${badge(c)}<h2 id="detail-title">${escape(c.title)}</h2><p class="detail-meta">${escape(c.category)} · 발표 ${date(c)} · 자료 확인 ${escape((c.checkedAt || "2026-09-08").replaceAll("-","."))}</p><p>${escape(c.summary)}</p><dl class="detail-facts"><div><dt>대상·키워드</dt><dd>${escape(c.tags)}</dd></div><div><dt>원산지·관계 국가</dt><dd>${escape(c.origin)}</dd></div><div><dt>확인 단계</dt><dd>${escape(c.stage)}</dd></div></dl><h3>무슨 일이 있었나요?</h3><p>${escape(c.detail)}</p><h3>함께 확인할 점</h3><p class="scope-note">${escape(c.caution)}</p><h3>원문 출처</h3>${(c.sources || []).map(s => `<p><a href="${escape(s.url)}" target="_blank" rel="noopener noreferrer">${escape(s.label)}</a></p>`).join("")}<a class="source-link" href="${escape(c.url)}" target="_blank" rel="noopener noreferrer"><span>${escape(c.publisher)}에서 원문 읽기<small>${escape(c.sourceType)} · 새 창으로 열림</small></span><span aria-hidden="true">↗</span></a></div>`;
+    $('detail-content').insertAdjacentHTML('beforeend','<div class="delete-area"><button id="delete-news" class="delete-button">이 뉴스 삭제</button><p id="delete-message" role="status"></p></div>');
+    $('delete-news').onclick=async()=>{
+      if(!confirm('“'+c.title+'” 뉴스를 삭제할까요?'))return;
+      const button=$('delete-news');button.disabled=true;button.textContent='삭제 중…';
+      try{
+        const response=await fetch('/api/news/'+encodeURIComponent(selectedId),{method:'DELETE',headers:{'X-News-Action':'delete'}});
+        if(!response.ok)throw new Error(response.status===404?'이미 삭제됐거나 서버를 다시 실행해야 합니다.':'삭제하지 못했습니다. 서버 상태를 확인해 주세요.');
+        location.reload();
+      }catch(error){$('delete-message').textContent=error.message;button.disabled=false;button.textContent='이 뉴스 삭제';}
+    };
     if(!$('detail').open) $('detail').showModal();
     $('detail').scrollTop=0;
   }
@@ -49,5 +61,10 @@
   for(const id of ['detail','about']) $(id).addEventListener('click',e=>{if(e.target===$(id)){const r=$(id).getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$(id).close();}});
   $('total-count').innerHTML=cases.length+'<small>건</small>';
   $('violation-count').innerHTML=cases.filter(c=>c.status==='violation').length+'<small>건</small>';
+  const recent = [...cases].sort((a,b)=>(b.checkedAt || '2026-09-08').localeCompare(a.checkedAt || '2026-09-08') || b.date.localeCompare(a.date)).slice(0,3);
+  $('latest-news').innerHTML=recent.map(c=>`<article class="latest-item">${badge(c)}<h3><button class="card-open" data-open="${c.id}">${escape(c.title)}</button></h3><p>${escape(c.summary)}</p><div class="latest-source">${escape(c.publisher)} · 발표 ${date(c)}<br>확인 ${escape((c.checkedAt || '2026-09-08').replaceAll('-','.'))}</div></article>`).join('');
+  document.querySelector('.followup').hidden=!cases.some(c=>c.id==='cabbage');
+  const scope=document.querySelector('#about .detail-inner > p:last-child');
+  if(scope)scope.textContent=scope.textContent.replace(/사례 \d+건/,'사례 '+cases.length+'건');
   render();
 })();
